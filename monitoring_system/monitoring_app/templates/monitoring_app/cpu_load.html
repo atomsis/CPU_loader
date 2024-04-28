@@ -1,0 +1,120 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Monitoring System</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <script>
+        $(document).ready(function() {
+            function fetchData() {
+                $.ajax({
+                    url: '/api/cpu/load/',
+                    type: 'GET',
+                    success: function(data) {
+                        $('#cpu_load').text(data.load_percentage + '%');
+                        $('#min_load_100').text(data.latest_100.min_load + '%');
+                        $('#max_load_100').text(data.latest_100.max_load + '%');
+                        $('#avg_load_100').text(data.latest_100.avg_load + '%');
+                        $('#min_load_all').text(data.all_records.min_load + '%');
+                        $('#max_load_all').text(data.all_records.max_load + '%');
+                        $('#avg_load_all').text(data.all_records.avg_load + '%');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    },
+                    complete: function() {
+                        setTimeout(fetchData, 10000);
+                    }
+                });
+            }
+
+            fetchData();
+
+            function sortTable(n) {
+                var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+                table = document.getElementById("cpu_load_table");
+                switching = true;
+                dir = "asc";
+                while (switching) {
+                    switching = false;
+                    rows = table.rows;
+                    for (i = 1; i < (rows.length - 1); i++) {
+                        shouldSwitch = false;
+                        x = rows[i].getElementsByTagName("TD")[n];
+                        y = rows[i + 1].getElementsByTagName("TD")[n];
+                        if (dir == "asc") {
+                            if (parseFloat(x.innerHTML) > parseFloat(y.innerHTML)) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        } else if (dir == "desc") {
+                            if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (shouldSwitch) {
+                        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                        switching = true;
+                        switchcount++;
+                    } else {
+                        if (switchcount == 0 && dir == "asc") {
+                            dir = "desc";
+                            switching = true;
+                        }
+                    }
+                }
+            }
+
+            $("#min_load_header").click(function() {
+                sortTable(0);
+            });
+            $("#max_load_header").click(function() {
+                sortTable(1);
+            });
+            $("#avg_load_header").click(function() {
+                sortTable(2);
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Monitoring System</h1>
+    <h2>CPU Load: <span id="cpu_load"></span></h2>
+    <table id="cpu_load_table">
+        <thead>
+            <tr>
+                <th id="min_load_header">Min Load</th>
+                <th id="max_load_header">Max Load</th>
+                <th id="avg_load_header">Avg Load</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td id="min_load_100"></td>
+                <td id="max_load_100"></td>
+                <td id="avg_load_100"></td>
+            </tr>
+        </tbody>
+    </table>
+    <table>
+    <thead>
+        <tr>
+            <th>Timestamp</th>
+            <th>Load Percentage</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in last_100_records %}
+        <tr>
+            <td>{{ record.timestamp }}</td>
+            <td>{{ record.load_percentage }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>
