@@ -8,18 +8,35 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <script>
         $(document).ready(function() {
+            function updateData(data) {
+                $('#cpu_load').text(data.load_percentage + '%');
+                $('#min_load_100').text(data.latest_100.min_load + '%');
+                $('#max_load_100').text(data.latest_100.max_load + '%');
+                $('#avg_load_100').text(data.latest_100.avg_load + '%');
+                $('#min_load_all').text(data.all_records.min_load + '%');
+                $('#max_load_all').text(data.all_records.max_load + '%');
+                $('#avg_load_all').text(data.all_records.avg_load + '%');
+                updateLastRecordsTable(data.last_100_records);
+            }
+
+            function updateLastRecordsTable(records) {
+                // Обновить таблицу с новыми данными
+                records.forEach(function(record) {
+                    $('#last_100_records_table_body').append(
+                        '<tr>' +
+                            '<td>' + record.formatted_timestamp + '</td>' +
+                            '<td>' + record.load_percentage + '</td>' +
+                        '</tr>'
+                    );
+                });
+            }
+
             function fetchData() {
                 $.ajax({
-                    url: '/api/cpu/load/',
+                    url: '/api/',
                     type: 'GET',
                     success: function(data) {
-                        $('#cpu_load').text(data.load_percentage + '%');
-                        $('#min_load_100').text(data.latest_100.min_load + '%');
-                        $('#max_load_100').text(data.latest_100.max_load + '%');
-                        $('#avg_load_100').text(data.latest_100.avg_load + '%');
-                        $('#min_load_all').text(data.all_records.min_load + '%');
-                        $('#max_load_all').text(data.all_records.max_load + '%');
-                        $('#avg_load_all').text(data.all_records.avg_load + '%');
+                        updateData(data);
                     },
                     error: function(xhr, status, error) {
                         console.error(error);
@@ -31,6 +48,32 @@
             }
 
             fetchData();
+
+<!--             $(document).ready(function() {-->
+<!--            function fetchData() {-->
+<!--                $.ajax({-->
+<!--                    url: '/api/',-->
+<!--                    type: 'GET',-->
+<!--                    success: function(data) {-->
+<!--                        $('#cpu_load').text(data.load_percentage + '%');-->
+<!--                        $('#min_load_100').text(data.latest_100.min_load + '%');-->
+<!--                        $('#max_load_100').text(data.latest_100.max_load + '%');-->
+<!--                        $('#avg_load_100').text(data.latest_100.avg_load + '%');-->
+<!--                        $('#min_load_all').text(data.all_records.min_load + '%');-->
+<!--                        $('#max_load_all').text(data.all_records.max_load + '%');-->
+<!--                        $('#avg_load_all').text(data.all_records.avg_load + '%');-->
+<!--                    },-->
+<!--                    error: function(xhr, status, error) {-->
+<!--                        console.error(error);-->
+<!--                    },-->
+<!--                    complete: function() {-->
+<!--                        setTimeout(fetchData, 10000);-->
+<!--                    }-->
+<!--                });-->
+<!--            }-->
+
+<!--            fetchData();-->
+
 
             function sortTable(n) {
                 var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
@@ -45,14 +88,28 @@
                         x = rows[i].getElementsByTagName("TD")[n];
                         y = rows[i + 1].getElementsByTagName("TD")[n];
                         if (dir == "asc") {
-                            if (parseFloat(x.innerHTML) > parseFloat(y.innerHTML)) {
-                                shouldSwitch = true;
-                                break;
+                            if (n === 0) { // Сортировка по Timestamp
+                                if (new Date(x.innerHTML) > new Date(y.innerHTML)) {
+                                    shouldSwitch = true;
+                                    break;
+                                }
+                            } else { // Сортировка по Load Percentage
+                                if (parseFloat(x.innerHTML) > parseFloat(y.innerHTML)) {
+                                    shouldSwitch = true;
+                                    break;
+                                }
                             }
                         } else if (dir == "desc") {
-                            if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) {
-                                shouldSwitch = true;
-                                break;
+                            if (n === 0) { // Сортировка по Timestamp
+                                if (new Date(x.innerHTML) < new Date(y.innerHTML)) {
+                                    shouldSwitch = true;
+                                    break;
+                                }
+                            } else { // Сортировка по Load Percentage
+                                if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) {
+                                    shouldSwitch = true;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -69,22 +126,20 @@
                 }
             }
 
-            $("#min_load_header").click(function() {
+            $("#timestamp_header").click(function() {
                 sortTable(0);
             });
-            $("#max_load_header").click(function() {
+            $("#load_percentage_header").click(function() {
                 sortTable(1);
             });
-            $("#avg_load_header").click(function() {
-                sortTable(2);
-            });
         });
+
     </script>
 </head>
 <body>
     <h1>Monitoring System</h1>
-    <h2>CPU Load: <span id="cpu_load"></span></h2>
-    <table id="cpu_load_table">
+    <h2>Aggregated Data for Latest 100 Records:</h2>
+    <table>
         <thead>
             <tr>
                 <th id="min_load_header">Min Load</th>
@@ -94,27 +149,47 @@
         </thead>
         <tbody>
             <tr>
-                <td id="min_load_100"></td>
-                <td id="max_load_100"></td>
-                <td id="avg_load_100"></td>
+                <td>{{ latest_100.min_load }}</td>
+                <td>{{ latest_100.max_load }}</td>
+                <td>{{ latest_100.avg_load }}</td>
             </tr>
         </tbody>
     </table>
+
+    <h2>Aggregated Data for All Records:</h2>
     <table>
-    <thead>
-        <tr>
-            <th>Timestamp</th>
-            <th>Load Percentage</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for record in last_100_records %}
-        <tr>
-            <td>{{ record.timestamp }}</td>
-            <td>{{ record.load_percentage }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        <thead>
+            <tr>
+                <th>Min Load</th>
+                <th>Max Load</th>
+                <th>Avg Load</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ all_records.min_load }}</td>
+                <td>{{ all_records.max_load }}</td>
+                <td>{{ all_records.avg_load }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Last 100 Records:</h2>
+    <table id="cpu_load_table">
+        <thead>
+            <tr>
+                <th id="timestamp_header">Timestamp</th>
+                <th id="load_percentage_header">Load Percentage</th>
+            </tr>
+        </thead>
+        <tbody id="last_100_records_table_body">
+            {% for record in last_100_records %}
+            <tr>
+                <td>{{ record.formatted_timestamp }}</td>
+                <td>{{ record.load_percentage }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>

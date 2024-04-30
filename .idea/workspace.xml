@@ -5,13 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="965f72ef-637f-402a-a2ff-675dcf52be4f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/info_collect_sys.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client_daemon.sh" beforeDir="false" afterPath="$PROJECT_DIR$/client_daemon.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitoring_system/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/monitoring_system/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitoring_system/monitoring_app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/monitoring_system/monitoring_app/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitoring_system/monitoring_app/templates/monitoring_app/cpu_load.html" beforeDir="false" afterPath="$PROJECT_DIR$/monitoring_system/monitoring_app/templates/monitoring_app/cpu_load.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitoring_system/monitoring_app/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/monitoring_system/monitoring_app/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitoring_system/monitoring_app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/monitoring_system/monitoring_app/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitoring_system/monitoring_system/asgi.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitoring_system/monitoring_system/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/monitoring_system/monitoring_system/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitoring_system/monitoring_system/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/monitoring_system/monitoring_system/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,11 +47,16 @@
     "Python.send_post_request.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "K:/PY proj/Info_col_sys/info_collect_sys/monitoring_system",
-    "settings.editor.selected.configurable": "preferences.keymap"
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/home/atomsis/Downloads/PYTHON_PROJ_НА РАБОТЕ/DJANGO4/CPU_loader/monitoring_system",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/monitoring_system/monitoring_app" />
+    </key>
+  </component>
   <component name="RunManager" selected="Python.cpu">
     <configuration name="cpu" type="PythonConfigurationType" factoryName="Python">
       <module name="info_collect_sys" />
@@ -60,9 +67,8 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="SDK_NAME" value="Python 3.10 (info_collect_sys)" />
-      <option name="WORKING_DIRECTORY" value="K:\PY proj\Info_col_sys\info_collect_sys\monitoring_system" />
-      <option name="IS_MODULE_SDK" value="false" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/monitoring_system" />
+      <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/monitoring_system/manage.py" />
@@ -109,7 +115,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-5a2391486177-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.13763.11" />
+        <option value="bundled-python-sdk-50da183f06c8-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.13135.95" />
       </set>
     </attachedChunks>
   </component>

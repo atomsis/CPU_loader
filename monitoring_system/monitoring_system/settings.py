@@ -20,6 +20,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'monitoring_app.apps.MonitoringAppConfig',
+    'channels',
+
 ]
 
 MIDDLEWARE = [
@@ -51,7 +53,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'monitoring_system.wsgi.application'
-
+# ASGI_APPLICATION = 'monitoring_system.asgi.application'
 
 
 
@@ -84,7 +86,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
