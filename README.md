@@ -11,6 +11,7 @@ pip install -r requirements.txt
 ```
 3 **Выполнить миграции Django:**
 ```bash
+cd monytoring_system
 python manage.py migrate
 ```
 3. Запустить сервер:
