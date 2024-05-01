@@ -10,7 +10,6 @@
 </head>
 <body>
     <h1>Monitoring System</h1>
-        <h2 id="latest_cpu">Latest CPU={{ last_cpu.load_percentage }}%</h2>
     <h2>Aggregated Data for Latest 100 Records:</h2>
     <table>
         <thead>
@@ -20,13 +19,13 @@
                 <th id="avg_load_header">Avg Load</th>
             </tr>
         </thead>
-         <tbody id="aggregated_data_body">
-        <tr>
-            <td id="min_load_value">{{ latest_100.min_load }}</td>
-            <td id="max_load_value">{{ latest_100.max_load }}</td>
-            <td id="avg_load_value">{{ latest_100.avg_load }}</td>
-        </tr>
-    </tbody>
+        <tbody>
+            <tr>
+                <td>{{ latest_100.min_load }}</td>
+                <td>{{ latest_100.max_load }}</td>
+                <td>{{ latest_100.avg_load }}</td>
+            </tr>
+        </tbody>
     </table>
 
     <h2>Aggregated Data for All Records:</h2>
@@ -40,9 +39,9 @@
         </thead>
         <tbody>
             <tr>
-                <td id="min_load_all">{{ all_records.min_load }}</td>
-                <td id="max_load_all">{{ all_records.max_load }}</td>
-                <td id="avg_load_all">{{ all_records.avg_load }}</td>
+                <td>{{ all_records.min_load }}</td>
+                <td>{{ all_records.max_load }}</td>
+                <td>{{ all_records.avg_load }}</td>
             </tr>
         </tbody>
     </table>
@@ -56,9 +55,13 @@
             </tr>
         </thead>
         <tbody id="last_100_records_table_body">
+            {% for record in last_100_records %}
+            <tr>
+                <td>{{ record.formatted_timestamp }}</td>
+                <td>{{ record.load_percentage }}</td>
+            </tr>
+            {% endfor %}
         </tbody>
     </table>
 </body>
 </html>
-
-
