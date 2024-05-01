@@ -1,23 +1,18 @@
-
-Конечно, вот README в формате Markdown:
-
-markdown
-Copy code
 ## Установка и запуск
 
 1. **Скачать репозиторий:**
 
 ```bash
-git clone <prj_repo_url>
-cd monitoring-system
-Установить зависимости:
-bash
-Copy code
+git clone https://github.com/atomsis/CPU_loader.git
+```
+2  **Установить зависимости:**
+```
 pip install -r requirements.txt
-Выполнить миграции Django:
-bash
-Copy code
+```
+3 **Выполнить миграции Django:**
+```bash
 python manage.py migrate
+```
 Запустить сервер:
 bash
 Copy code
