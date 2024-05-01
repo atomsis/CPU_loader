@@ -14,20 +14,12 @@ from django.core import serializers
 import requests
 
 
-@csrf_exempt
-def latest_cpu_load(request):
-    if request.method == 'GET':
-        try:
-            latest_record = CPULoad.objects.latest('timestamp')
-            data = {
-                'timestamp': latest_record.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
-                'load_percentage': latest_record.load_percentage
-            }
-            return JsonResponse(data)
-        except CPULoad.DoesNotExist:
-            return JsonResponse({'error': 'No data available'}, status=404)
-    else:
-        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+def get_last_100_cpu_load(request):
+    last_100_records = CPULoad.objects.order_by('-timestamp')[:100]
+    serializer = CPULoadSerializer(last_100_records, many=True)
+    return JsonResponse(serializer.data, safe=False)
+
 
 def CPULoadPageView(request):
     def get_aggregated_data(queryset):
@@ -36,7 +28,6 @@ def CPULoadPageView(request):
         avg_load = round(queryset.aggregate(avg_load=Avg('load_percentage'))['avg_load'], 2)
         return min_load, max_load, avg_load
 
-    # Загрузка последних 100 записей
     last_100_records = CPULoad.objects.order_by('-timestamp')[:100]
     all_records = CPULoad.objects.all()
 
@@ -53,11 +44,8 @@ def CPULoadPageView(request):
             'max_load': max_load_all,
             'avg_load': avg_load_all
         },
-        'last_100_records': last_100_records,
     }
-    # Передача данных в шаблон
     return render(request, 'monitoring_app/cpu_load.html', data)
-
 
 
 #
@@ -81,6 +69,7 @@ class CPULoadAPIView(APIView):
 
         min_load_100, max_load_100, avg_load_100 = self.get_aggregated_data(latest_100_records)
         min_load_all, max_load_all, avg_load_all = self.get_aggregated_data(all_records)
+        last_cpu = CPULoad.objects.latest()
 
         data = {
             'latest_100': {
@@ -92,8 +81,8 @@ class CPULoadAPIView(APIView):
                 'min_load': min_load_all,
                 'max_load': max_load_all,
                 'avg_load': avg_load_all
-            }
+            },
+            'last_cpu':last_cpu.load_percentage
         }
+
         return JsonResponse(data)
-
-

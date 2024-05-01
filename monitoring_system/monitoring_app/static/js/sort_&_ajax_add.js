@@ -1,23 +1,23 @@
 $(document).ready(function() {
-    function updateData(data) {
-        $('#cpu_load').text(data.load_percentage + '%');
-        $('#min_load_100').text(data.latest_100.min_load + '%');
-        $('#max_load_100').text(data.latest_100.max_load + '%');
-        $('#avg_load_100').text(data.latest_100.avg_load + '%');
-        $('#min_load_all').text(data.all_records.min_load + '%');
-        $('#max_load_all').text(data.all_records.max_load + '%');
-        $('#avg_load_all').text(data.all_records.avg_load + '%');
-        updateLastRecordsTable(data.last_100_records);
+    function fetchLast100Records() {
+        $.ajax({
+            url: '/api/get_last_100_cpu_load/',
+            type: 'GET',
+            success: function(data) {
+                updateLast100RecordsTable(data);
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
     }
 
-    function updateLastRecordsTable(records) {
-        // Clear the table before adding new data
+    function updateLast100RecordsTable(records) {
         $('#last_100_records_table_body').empty();
-        // Update the table with new data
         records.forEach(function(record) {
             $('#last_100_records_table_body').append(
                 '<tr>' +
-                    '<td>' + record.formatted_timestamp + '</td>' +
+                    '<td>' + record.timestamp + '</td>' +
                     '<td>' + record.load_percentage + '</td>' +
                 '</tr>'
             );
@@ -26,21 +26,25 @@ $(document).ready(function() {
 
     function fetchData() {
         $.ajax({
-            url: '/api/',
-            type: 'GET',
-            success: function(data) {
-                updateData(data);
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-            },
-            complete: function() {
-                setTimeout(fetchData, 10000);
+                url: '/api/cpu/load/',
+                type: 'GET',
+                success: function(data) {
+                     $('#latest_cpu').text('Latest CPU=' + data.last_cpu + '%');
+                     $('#min_load_value').text(data.latest_100.min_load + '%');
+                     $('#max_load_value').text(data.latest_100.max_load + '%');
+                     $('#avg_load_value').text(data.latest_100.avg_load + '%');
+                     $('#min_load_all').text(data.all_records.min_load + '%');
+                     $('#max_load_all').text(data.all_records.max_load + '%');
+                     $('#avg_load_all').text(data.all_records.avg_load + '%');
+                    },
+                error: function(xhr, status, error) {
+                     console.error(error);
+                    },
+                     complete: function() {
+                        setTimeout(fetchData, 10000);
+                    }
+                });
             }
-        });
-    }
-
-    fetchData();
 
     function sortTable(n) {
         var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
@@ -96,7 +100,12 @@ $(document).ready(function() {
     $("#timestamp_header").click(function() {
         sortTable(0);
     });
+
     $("#load_percentage_header").click(function() {
         sortTable(1);
     });
+
+    fetchLast100Records();
+    fetchData()
+    setInterval(fetchLast100Records, 10000);
 });
