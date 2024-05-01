@@ -1,5 +1,5 @@
 SERVER_IP="127.0.0.1"
-SERVER_PORT="8001"
+SERVER_PORT="8000"
 
 while true; do
     cpuUsage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
